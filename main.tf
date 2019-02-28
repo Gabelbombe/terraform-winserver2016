@@ -61,7 +61,7 @@ resource "aws_instance" "winrm" {
   key_name = "${var.key_name}"
 
   # Our Security group to allow WinRM access
-  security_groups = ["${aws_security_group.default.name}"]
+  security_groups = ["${aws_security_group.default.name}"] # change to reflect modified sg as variable
 
   # Note that terraform uses Go WinRM which doesn't support https at this time. If server is not on a private network,
   # recommend bootstraping Chef via user_data.  See asg_user_data.tpl for an example on how to do that.
