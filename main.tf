@@ -4,8 +4,26 @@ provider "aws" {
   region = "${var.aws_region}"
 }
 
+variable "aws_region" {
+  default = "us-west-2"
+}
+
+variable "admin_password" {
+  default = "dontusethispasswordyouidiot"
+}
+
+variable "key_name" {
+  default = "thiskeydoesntexist"
+}
+
+/* Use this to attach to secgroup? ~jd
+var "sso_secgroup_name" {
+  default = "snBlueMgmtPrivateSubnetAZ1"
+}
+*/
+
 # Access the instances via WinRM over HTTP and HTTPS
-# Please modify as needed
+# Please modify as needed `snBlueMgmtPrivateSubnetAZ1`?
 resource "aws_security_group" "default" {
   name        = "Temporary SG"
   description = "Used in the terraform"
@@ -61,8 +79,9 @@ resource "aws_instance" "winrm" {
   key_name = "${var.key_name}"
 
   # Our Security group to allow WinRM access
-  security_groups = ["${aws_security_group.default.name}"] # change to reflect modified sg as variable
 
+  # security_groups = ["${var.sso_secgroup_name}"] # use this i guess... ~jd
+  security_groups = ["${aws_security_group.default.name}"] # change to reflect modified sg as variable
   # Note that terraform uses Go WinRM which doesn't support https at this time. If server is not on a private network,
   # recommend bootstraping Chef via user_data.  See asg_user_data.tpl for an example on how to do that.
   user_data = <<EOF
